@@ -1,0 +1,18 @@
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /potteryshop
+
+spring:
+  application:
+    name: PotteryShop
+  
+  datasource:
+    url: jdbc:mysql://localhost:${DB_PORT}/${DB_DATABASE_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
