@@ -3,6 +3,7 @@ package com.project.potteryshop.Entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.project.potteryshop.Enum.UserRole;
 import com.project.potteryshop.Enum.UserStatus;
 
 import jakarta.persistence.Entity;
@@ -31,6 +32,7 @@ public class User {
     private String username;
     private String address;
     private String password;
+    private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
     private UserStatus status;
