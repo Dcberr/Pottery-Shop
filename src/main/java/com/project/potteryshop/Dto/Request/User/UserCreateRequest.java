@@ -1,8 +1,6 @@
-package com.project.potteryshop.Dto.Request;
+package com.project.potteryshop.Dto.Request.User;
 
 import java.time.LocalDate;
-
-import com.project.potteryshop.Enum.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +17,4 @@ public class UserCreateRequest {
     private String username;
     private String address;
     private String password;
-    private UserRole userRole;
 }

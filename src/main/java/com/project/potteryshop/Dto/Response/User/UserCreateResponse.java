@@ -1,4 +1,4 @@
-package com.project.potteryshop.Dto.Response;
+package com.project.potteryshop.Dto.Response.User;
 
 import java.time.LocalDate;
 import java.util.List;
