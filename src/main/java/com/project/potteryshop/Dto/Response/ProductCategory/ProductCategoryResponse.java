@@ -2,8 +2,7 @@ package com.project.potteryshop.Dto.Response.ProductCategory;
 
 import java.util.List;
 
-import com.project.potteryshop.Entity.Product;
-
+import com.project.potteryshop.Dto.Response.Product.ProductResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +14,5 @@ public class ProductCategoryResponse {
     private String categoryId;
     private String name;
     private int numOfProduct;
-    private List<Product> products;
+    private List<ProductResponse> products;
 }

@@ -7,5 +7,5 @@ import com.project.potteryshop.Entity.ProductCategory;
 
 @Repository
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, String> {
-
+    ProductCategory getProductCategoryByCategoryId(String categoryId);
 }
