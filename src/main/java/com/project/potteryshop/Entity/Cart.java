@@ -22,9 +22,9 @@ public class Cart {
     private String cartId;
     private int numOfProduct;
 
-    @OneToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    // @OneToOne
+    // @JoinColumn(name = "userId")
+    // private User user;
 
     @ManyToMany
     @JoinTable(name = "cart_products", joinColumns = @JoinColumn(name = "cartId"), inverseJoinColumns = @JoinColumn(name = "productId"))

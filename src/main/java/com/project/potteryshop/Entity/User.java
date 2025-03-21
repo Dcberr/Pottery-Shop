@@ -6,6 +6,7 @@ import java.util.List;
 import com.project.potteryshop.Enum.UserRole;
 import com.project.potteryshop.Enum.UserStatus;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,12 +27,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
     private String name;
+
+    @Column(unique = true)
     private String email;
     private String phoneNumber;
     private LocalDate dob;
+
+    @Column(unique = true)
     private String username;
     private String address;
     private String password;
+
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
     @Enumerated(EnumType.STRING)

@@ -1,6 +1,9 @@
 package com.project.potteryshop.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +20,20 @@ public class CartController {
     private CartService cartService;
 
     @PostMapping
-    public ApiResponse<CartResponse> createCart(Cart cart) {
-        return ApiResponse.<CartResponse>builder()
+    public ApiResponse<Cart> createCart(Cart cart) {
+        return ApiResponse.<Cart>builder()
                 .code(200)
                 .message("Created Cart Successfull!!!")
-                .result(cartService.createCart(cart))
+                .result(cartService.createCart())
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<CartResponse>> getAllCart() {
+        return ApiResponse.<List<CartResponse>>builder()
+                .code(200)
+                .message("Get All Carts Successful!!!")
+                .result(cartService.getAllCart())
                 .build();
     }
 }

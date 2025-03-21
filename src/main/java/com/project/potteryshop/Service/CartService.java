@@ -1,5 +1,7 @@
 package com.project.potteryshop.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,4 +31,7 @@ public class CartService {
         return newCart;
     }
 
+    public List<CartResponse> getAllCart() {
+        return cartRepository.findAll().stream().map(cartMapper::toCartResponse).toList();
+    }
 }
