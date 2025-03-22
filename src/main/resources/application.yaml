@@ -16,3 +16,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+minio:
+  url: ${MINIO_URL}
+  accessKey: ${MINIO_ACCESSKEY}
+  secretKey: ${MINIO_SECRETKEY}
+  bucketName: ${MINIO_BUCKETNAME}
