@@ -1,6 +1,9 @@
 package com.project.potteryshop.Entity;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.project.potteryshop.Enum.PaymentMethod;
 
 import jakarta.persistence.*;
@@ -10,6 +13,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderId")
 public class UserOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

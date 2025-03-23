@@ -2,6 +2,8 @@ package com.project.potteryshop.Entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.project.potteryshop.Enum.PaymentMethod;
 
 import jakarta.persistence.Entity;
@@ -19,6 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "paymentId")
 public class PaymentHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
