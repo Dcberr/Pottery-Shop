@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.potteryshop.Dto.ApiResponse;
@@ -20,7 +22,7 @@ public class CartController {
     private CartService cartService;
 
     @PostMapping
-    public ApiResponse<Cart> createCart(Cart cart) {
+    public ApiResponse<Cart> createCart(@RequestBody Cart cart) {
         return ApiResponse.<Cart>builder()
                 .code(200)
                 .message("Created Cart Successfull!!!")
@@ -34,6 +36,15 @@ public class CartController {
                 .code(200)
                 .message("Get All Carts Successful!!!")
                 .result(cartService.getAllCart())
+                .build();
+    }
+
+    @PostMapping("/add")
+    public ApiResponse<Cart> addNewProduct(@RequestParam String userId, @RequestParam String productId) {
+        return ApiResponse.<Cart>builder()
+                .code(200)
+                .message("Add Product " + productId + " Successful!!!")
+                .result(cartService.addNewProduct(userId, productId))
                 .build();
     }
 }

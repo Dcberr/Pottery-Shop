@@ -89,7 +89,8 @@ public class MinioService {
             }
         }).collect(Collectors.toList());
 
-        Image image = new Image();
+        Product product = productRepository.findById(productId).orElseThrow();
+        Image image = product.getImage();
         // Product product = productRepository.findById(productId).orElseThrow();
         image.setProductId(productId);
         image.setLinkImage(filesName);

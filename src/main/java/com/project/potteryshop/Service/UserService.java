@@ -9,10 +9,12 @@ import com.project.potteryshop.Dto.Request.User.UserCreateRequest;
 import com.project.potteryshop.Dto.Request.User.UserUpdateRequest;
 import com.project.potteryshop.Dto.Response.User.UserCreateResponse;
 import com.project.potteryshop.Dto.Response.User.UserResponse;
+import com.project.potteryshop.Entity.Cart;
 import com.project.potteryshop.Entity.User;
 import com.project.potteryshop.Enum.UserRole;
 import com.project.potteryshop.Enum.UserStatus;
 import com.project.potteryshop.Mapper.UserMapper;
+import com.project.potteryshop.Repository.CartRepository;
 import com.project.potteryshop.Repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,19 +31,25 @@ public class UserService {
     private UserMapper userMapper;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private CartRepository cartRepository;
 
     public UserCreateResponse createUser(UserCreateRequest newUser) {
         User user = userMapper.toUser(newUser);
         log.info(newUser.getName());
         log.info(user.getName());
 
-        user.setCart(cartService.createCart());
-
         user.setStatus(UserStatus.Active);
         user.setUserRole(UserRole.Customer);
+        userRepository.save(user);
+
+        Cart newCart = cartService.createCart();
+        newCart.setUser(user);
+        user.setCart(newCart);
+
+        cartRepository.save(newCart);
 
         UserCreateResponse response = userMapper.toUserCreateResponse(user);
-        userRepository.save(user);
 
         return response;
     }

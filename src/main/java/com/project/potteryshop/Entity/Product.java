@@ -2,7 +2,9 @@ package com.project.potteryshop.Entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
@@ -32,29 +34,36 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
+    @JsonBackReference
     private ProductCategory productCategory;
 
     @OneToOne
     @JoinColumn(name = "imageId")
+    @JsonManagedReference
     private Image image;
 
     @OneToOne
     @JoinColumn(name = "itemId")
+    @JsonManagedReference
     private ProductItem productItem;
 
     @ManyToMany
     @JoinTable(name = "product_discounts", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "discountId"))
+    @JsonManagedReference
     private List<Discount> discounts;
 
     @ManyToMany
     @JoinTable(name = "product_orders", joinColumns = @JoinColumn(name = "productId"), inverseJoinColumns = @JoinColumn(name = "orderId"))
+    @JsonBackReference
     private List<UserOrder> orders;
 
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<Feedback> feedbacks;
 
     @ManyToMany(mappedBy = "products")
     // @JoinTable(name = "product_carts", joinColumns = @JoinColumn(name =
     // "productId"), inverseJoinColumns = @JoinColumn(name = "cartId"))
+    @JsonBackReference
     private List<Cart> carts;
 }

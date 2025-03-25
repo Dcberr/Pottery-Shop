@@ -2,6 +2,7 @@ package com.project.potteryshop.Entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -26,9 +27,10 @@ public class Cart {
     private String cartId;
     private int numOfProduct;
 
-    // @OneToOne
-    // @JoinColumn(name = "userId")
-    // private User user;
+    @OneToOne
+    @JoinColumn(name = "userId")
+    @JsonBackReference
+    private User user;
 
     @ManyToMany
     @JoinTable(name = "cart_products", joinColumns = @JoinColumn(name = "cartId"), inverseJoinColumns = @JoinColumn(name = "productId"))

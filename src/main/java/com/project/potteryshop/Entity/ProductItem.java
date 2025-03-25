@@ -1,5 +1,6 @@
 package com.project.potteryshop.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -30,5 +31,6 @@ public class ProductItem {
 
     @OneToOne
     @JoinColumn(name = "productId")
+    @JsonBackReference
     private Product product;
 }

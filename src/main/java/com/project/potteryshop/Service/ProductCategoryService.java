@@ -54,7 +54,7 @@ public class ProductCategoryService {
                 .stream()
                 .map(productMapper::toProductResponse) // Chuyển từng Product thành ProductResponse
                 .toList()); // Chuyển thành danh sách List<ProductResponse>
-
+        productCategoryRepository.save(category);
         return response;
     }
 }

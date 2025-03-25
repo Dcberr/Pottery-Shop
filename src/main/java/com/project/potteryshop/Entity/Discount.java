@@ -3,6 +3,7 @@ package com.project.potteryshop.Entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -28,5 +29,6 @@ public class Discount {
     private String description;
 
     @ManyToMany(mappedBy = "discounts")
+    @JsonBackReference
     private List<Product> products;
 }

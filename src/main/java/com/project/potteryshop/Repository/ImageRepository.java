@@ -8,4 +8,6 @@ import com.project.potteryshop.Entity.Image;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, String> {
     Image findImageByLinkImage(String linkImage);
+
+    Image findByProductId(String productId);
 }

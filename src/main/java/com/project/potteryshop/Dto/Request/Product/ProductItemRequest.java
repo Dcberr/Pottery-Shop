@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreateRequest {
-    private String name;
-    private String description;
-    private int remainingQuantity;
+public class ProductItemRequest {
     private float price;
     private String material;
     private String publisher;
@@ -18,4 +15,5 @@ public class ProductCreateRequest {
     private String color;
     private String pattern;
     private String brand;
+
 }

@@ -1,46 +1,69 @@
 package com.project.potteryshop.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.potteryshop.Dto.Request.Product.ProductCreateRequest;
 import com.project.potteryshop.Dto.Response.Product.ProductResponse;
 import com.project.potteryshop.Entity.Image;
 import com.project.potteryshop.Entity.Product;
 import com.project.potteryshop.Entity.ProductCategory;
+import com.project.potteryshop.Entity.ProductItem;
+import com.project.potteryshop.Mapper.ProductItemMapper;
 import com.project.potteryshop.Mapper.ProductMapper;
 import com.project.potteryshop.Repository.ImageRepository;
 import com.project.potteryshop.Repository.ProductCategoryRepository;
+import com.project.potteryshop.Repository.ProductItemRepository;
 import com.project.potteryshop.Repository.ProductRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ProductService {
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private ProductCategoryRepository productCategoryRepository;
-    @Autowired
-    private ProductMapper productMapper;
-    @Autowired
-    private ImageRepository imageRepository;
+    private final ProductRepository productRepository;
+    private final ProductCategoryRepository productCategoryRepository;
+    private final ProductMapper productMapper;
+    private final ImageRepository imageRepository;
+    private final ProductItemMapper productItemMapper;
+    private final ProductItemRepository productItemRepository;
 
+    @Transactional
     public ProductResponse createProduct(ProductCreateRequest request, String categoryId) {
+        // Tìm category trước khi tạo product
+        ProductCategory productCategory = productCategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("ProductCategory not found"));
+
+        // Khởi tạo và thiết lập Product
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
-        ProductCategory productCategory = productCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("ProductCategory not found"));
         product.setProductCategory(productCategory);
+        product.setRemainingQuantity(request.getRemainingQuantity());
 
-        Image image = new Image();
-        imageRepository.save(image);
-        product.setImage(image);
-
+        // Lưu product để có product ID
         productRepository.save(product);
 
+        // Tạo và liên kết Image
+        Image image = new Image();
+        image.setProductId(product.getProductId());
+        product.setImage(image);
+        imageRepository.save(image);
+
+        // Tạo và liên kết ProductItem
+        ProductItem productItem = productItemMapper.toProductItem(
+                productItemMapper.toBodyProductItem(request));
+        productItem.setProduct(product);
+        productItemRepository.save(productItem);
+        product.setProductItem(productItem);
+
         return productMapper.toProductResponse(product);
+    }
+
+    public ProductResponse getProductById(String productId) {
+        return productMapper.toProductResponse(
+                productRepository.findByProductId(productId));
     }
 }
