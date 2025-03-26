@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.potteryshop.Dto.ApiResponse;
 import com.project.potteryshop.Dto.Request.Product.ProductCreateRequest;
 import com.project.potteryshop.Dto.Response.Product.ProductResponse;
+import com.project.potteryshop.Entity.Product;
 import com.project.potteryshop.Service.ProductService;
 
 @RestController
@@ -22,9 +23,9 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ApiResponse<ProductResponse> createProduct(@RequestBody ProductCreateRequest request,
+    public ApiResponse<Product> createProduct(@RequestBody ProductCreateRequest request,
             @RequestParam String categoryId) {
-        return ApiResponse.<ProductResponse>builder()
+        return ApiResponse.<Product>builder()
                 .code(200)
                 .message("Created Product Successful!!!")
                 .result(productService.createProduct(request, categoryId))
@@ -32,8 +33,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ApiResponse<ProductResponse> getProductById(@PathVariable String productId) {
-        return ApiResponse.<ProductResponse>builder()
+    public ApiResponse<Product> getProductById(@PathVariable String productId) {
+        return ApiResponse.<Product>builder()
                 .code(200)
                 .message("Get Product " + productId + " Successfull!!!")
                 .result(productService.getProductById(productId))

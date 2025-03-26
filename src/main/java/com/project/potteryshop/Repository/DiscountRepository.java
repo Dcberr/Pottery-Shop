@@ -7,5 +7,5 @@ import com.project.potteryshop.Entity.Discount;
 
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, String> {
-
+    Discount findByDiscountId(String discountId);
 }

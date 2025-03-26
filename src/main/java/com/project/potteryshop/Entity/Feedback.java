@@ -1,5 +1,6 @@
 package com.project.potteryshop.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -25,9 +26,11 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "productId")
+    @JsonBackReference
     private Product product;
 }

@@ -33,11 +33,11 @@ public class DiscountService {
                 .map(productId -> productRepository.findByProductId(productId))
                 .toList();
 
-        log.info(products.get(0).getProductId());
+        // log.info(products.get(0).getProductId());
 
         discount.setProducts(products);
 
-        log.info(discount.getProducts().get(0).getProductId());
+        // log.info(discount.getProducts().get(0).getProductId());
 
         discountRepository.save(discount);
 
@@ -47,5 +47,9 @@ public class DiscountService {
         }
 
         return discount;
+    }
+
+    public Discount getDiscountById(String discountId) {
+        return discountRepository.findByDiscountId(discountId);
     }
 }

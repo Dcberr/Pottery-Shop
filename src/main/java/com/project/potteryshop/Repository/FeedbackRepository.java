@@ -3,9 +3,9 @@ package com.project.potteryshop.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project.potteryshop.Entity.User;
+import com.project.potteryshop.Entity.Feedback;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
-    User findByUserId(String userId);
+public interface FeedbackRepository extends JpaRepository<Feedback, String> {
+
 }

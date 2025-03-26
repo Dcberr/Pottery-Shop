@@ -31,7 +31,7 @@ public class ProductService {
     private final ProductItemRepository productItemRepository;
 
     @Transactional
-    public ProductResponse createProduct(ProductCreateRequest request, String categoryId) {
+    public Product createProduct(ProductCreateRequest request, String categoryId) {
         // Tìm category trước khi tạo product
         ProductCategory productCategory = productCategoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("ProductCategory not found"));
@@ -59,11 +59,10 @@ public class ProductService {
         productItemRepository.save(productItem);
         product.setProductItem(productItem);
 
-        return productMapper.toProductResponse(product);
+        return product;
     }
 
-    public ProductResponse getProductById(String productId) {
-        return productMapper.toProductResponse(
-                productRepository.findByProductId(productId));
+    public Product getProductById(String productId) {
+        return productRepository.findByProductId(productId);
     }
 }

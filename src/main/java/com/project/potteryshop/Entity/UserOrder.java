@@ -2,7 +2,9 @@ package com.project.potteryshop.Entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.project.potteryshop.Enum.PaymentMethod;
 
@@ -27,18 +29,22 @@ public class UserOrder {
 
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonBackReference
     private User user;
 
     @OneToOne
     @JoinColumn(name = "cartId")
+    @JsonBackReference
     private Cart cart;
 
     @ManyToMany(mappedBy = "orders")
     // @JoinTable(name = "order_products", joinColumns = @JoinColumn(name =
     // "orderId"), inverseJoinColumns = @JoinColumn(name = "productId"))
+    @JsonManagedReference
     private List<Product> products;
 
     @OneToOne
     @JoinColumn(name = "paymentId")
+    @JsonManagedReference
     private PaymentHistory paymentHistory;
 }
