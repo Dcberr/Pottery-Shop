@@ -1,7 +1,10 @@
 package com.project.potteryshop.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +31,21 @@ public class DiscountController {
                 .build();
     }
 
-    @GetMapping
-    public ApiResponse<Discount> getDiscountById(@RequestParam String discountId) {
+    @GetMapping("/{discountId}")
+    public ApiResponse<Discount> getDiscountById(@PathVariable String discountId) {
         return ApiResponse.<Discount>builder()
                 .code(200)
                 .message("Get Discount " + discountId + " Successful!!!")
                 .result(discountService.getDiscountById(discountId))
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<Discount>> getAllDiscounts() {
+        return ApiResponse.<List<Discount>>builder()
+                .code(200)
+                .message("Get All Discount Successful!!!")
+                .result(discountService.getAllDiscounts())
                 .build();
     }
 }

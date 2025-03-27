@@ -52,4 +52,8 @@ public class DiscountService {
     public Discount getDiscountById(String discountId) {
         return discountRepository.findByDiscountId(discountId);
     }
+
+    public List<Discount> getAllDiscounts() {
+        return discountRepository.findAll().stream().toList();
+    }
 }

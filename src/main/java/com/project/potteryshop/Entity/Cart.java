@@ -36,8 +36,8 @@ public class Cart {
     @JoinTable(name = "cart_products", joinColumns = @JoinColumn(name = "cartId"), inverseJoinColumns = @JoinColumn(name = "productId"))
     private List<Product> products;
 
-    @OneToOne
-    @JoinColumn(name = "orderId")
-    private UserOrder order;
+    // @OneToOne
+    // @JoinColumn(name = "orderId")
+    // private UserOrder order;
 
 }

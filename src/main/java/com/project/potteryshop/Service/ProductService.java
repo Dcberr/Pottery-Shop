@@ -1,10 +1,11 @@
 package com.project.potteryshop.Service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.potteryshop.Dto.Request.Product.ProductCreateRequest;
-import com.project.potteryshop.Dto.Response.Product.ProductResponse;
 import com.project.potteryshop.Entity.Image;
 import com.project.potteryshop.Entity.Product;
 import com.project.potteryshop.Entity.ProductCategory;
@@ -64,5 +65,9 @@ public class ProductService {
 
     public Product getProductById(String productId) {
         return productRepository.findByProductId(productId);
+    }
+
+    public List<Product> getAllProduct() {
+        return productRepository.findAll().stream().toList();
     }
 }

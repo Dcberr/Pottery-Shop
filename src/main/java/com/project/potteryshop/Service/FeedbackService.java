@@ -1,5 +1,7 @@
 package com.project.potteryshop.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,4 +45,7 @@ public class FeedbackService {
         return feedback;
     }
 
+    public List<Feedback> getAllFeedback() {
+        return feedbackRepository.findAll().stream().toList();
+    }
 }

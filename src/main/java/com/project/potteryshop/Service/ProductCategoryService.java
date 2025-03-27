@@ -1,5 +1,7 @@
 package com.project.potteryshop.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +58,9 @@ public class ProductCategoryService {
                 .toList()); // Chuyển thành danh sách List<ProductResponse>
         productCategoryRepository.save(category);
         return response;
+    }
+
+    public List<ProductCategory> getAllCategories() {
+        return productCategoryRepository.findAll().stream().toList();
     }
 }

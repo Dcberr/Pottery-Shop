@@ -20,10 +20,12 @@ public class UserOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String orderId;
+    // private String receiver;
+    // private String phone;
+    // private String address;
 
     private int numOfProduct;
     private float totalPrice;
-
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
@@ -32,10 +34,10 @@ public class UserOrder {
     @JsonBackReference
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "cartId")
-    @JsonBackReference
-    private Cart cart;
+    // @OneToOne
+    // @JoinColumn(name = "cartId")
+    // @JsonBackReference
+    // private Cart cart;
 
     @ManyToMany(mappedBy = "orders")
     // @JoinTable(name = "order_products", joinColumns = @JoinColumn(name =

@@ -1,5 +1,7 @@
 package com.project.potteryshop.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,15 @@ public class ProductController {
                 .code(200)
                 .message("Get Product " + productId + " Successfull!!!")
                 .result(productService.getProductById(productId))
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<Product>> getAllProducts() {
+        return ApiResponse.<List<Product>>builder()
+                .code(200)
+                .message("Get All Products Successfull!!!")
+                .result(productService.getAllProduct())
                 .build();
     }
 }

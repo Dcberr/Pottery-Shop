@@ -67,4 +67,8 @@ public class UserService {
 
         return userMapper.toUserResponse(user);
     }
+
+    public UserResponse getUserById(String userId) {
+        return userMapper.toUserResponse(userRepository.findByUserId(userId));
+    }
 }

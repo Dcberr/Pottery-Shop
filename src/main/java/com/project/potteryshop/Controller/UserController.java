@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ApiResponse<UserCreateResponse> createUser(@RequestBody UserCreateRequest newUser) {
         return ApiResponse.<UserCreateResponse>builder()
                 .code(200)
@@ -55,4 +56,12 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/{userId}")
+    public ApiResponse<UserResponse> getUserById(@PathVariable String userId) {
+        return ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Get User " + userId + " Successful!!!")
+                .result(userService.getUserById(userId))
+                .build();
+    }
 }

@@ -8,4 +8,6 @@ import com.project.potteryshop.Entity.Cart;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, String> {
     Cart findByUser_UserId(String userId);
+
+    Cart findByCartId(String cartId);
 }

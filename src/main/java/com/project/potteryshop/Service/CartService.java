@@ -56,4 +56,8 @@ public class CartService {
 
         return cart;
     }
+
+    public Cart getCartById(String cartId) {
+        return cartRepository.findByCartId(cartId);
+    }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,15 @@ public class CartController {
                 .code(200)
                 .message("Add Product " + productId + " Successful!!!")
                 .result(cartService.addNewProduct(userId, productId))
+                .build();
+    }
+
+    @GetMapping("/{cartId}")
+    public ApiResponse<Cart> getCartById(@PathVariable String cartId) {
+        return ApiResponse.<Cart>builder()
+                .code(200)
+                .message("Get Product " + cartId + " Successful!!!")
+                .result(cartService.getCartById(cartId))
                 .build();
     }
 }
