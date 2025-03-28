@@ -8,4 +8,6 @@ import com.project.potteryshop.Entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     User findByUserId(String userId);
+
+    User findByUsername(String username);
 }

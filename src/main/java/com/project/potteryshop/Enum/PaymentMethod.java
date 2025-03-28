@@ -1,6 +1,6 @@
 package com.project.potteryshop.Enum;
 
 public enum PaymentMethod {
-    Momo,
+    MOMO,
     COD
 }

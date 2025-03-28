@@ -16,5 +16,5 @@ public class CartResponse {
     private String cartId;
     private int numOfProduct;
     private List<Product> products;
-    private UserOrder order;
+    // private UserOrder order;
 }

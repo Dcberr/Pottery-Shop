@@ -22,3 +22,6 @@ minio:
   accessKey: ${MINIO_ACCESSKEY}
   secretKey: ${MINIO_SECRETKEY}
   bucketName: ${MINIO_BUCKETNAME}
+
+jwt:
+  signerKey: ${SIGNERKEY}

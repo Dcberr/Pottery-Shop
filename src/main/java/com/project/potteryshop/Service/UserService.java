@@ -3,6 +3,8 @@ package com.project.potteryshop.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.potteryshop.Dto.Request.User.UserCreateRequest;
@@ -39,8 +41,11 @@ public class UserService {
         log.info(newUser.getName());
         log.info(user.getName());
 
-        user.setStatus(UserStatus.Active);
-        user.setUserRole(UserRole.Customer);
+        user.setStatus(UserStatus.ACTIVE);
+        user.setUserRole(UserRole.CUSTOMER);
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(user);
 
         Cart newCart = cartService.createCart();
@@ -62,6 +67,11 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow();
 
         userMapper.toUpdateUser(user, request);
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        if (!request.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
 
         userRepository.save(user);
 
