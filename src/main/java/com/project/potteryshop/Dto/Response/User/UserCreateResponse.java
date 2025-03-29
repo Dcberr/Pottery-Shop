@@ -2,10 +2,12 @@ package com.project.potteryshop.Dto.Response.User;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import com.project.potteryshop.Entity.Cart;
 import com.project.potteryshop.Entity.Feedback;
 import com.project.potteryshop.Entity.PaymentHistory;
+import com.project.potteryshop.Entity.Role;
 import com.project.potteryshop.Entity.UserOrder;
 import com.project.potteryshop.Enum.UserRole;
 import com.project.potteryshop.Enum.UserStatus;
@@ -22,7 +24,7 @@ public class UserCreateResponse {
     private String name;
     private String email;
     private String phoneNumber;
-    private UserRole userRole;
+    private Set<Role> userRole;
     private LocalDate dob;
     private String address;
     private UserStatus status;
