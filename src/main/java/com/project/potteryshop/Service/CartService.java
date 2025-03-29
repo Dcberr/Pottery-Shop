@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.project.potteryshop.Dto.Response.Cart.CartResponse;
@@ -26,6 +27,7 @@ public class CartService {
     @Autowired
     private ProductRepository productRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Cart createCart() {
         Cart newCart = new Cart();
 
@@ -36,6 +38,7 @@ public class CartService {
         return newCart;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CartResponse> getAllCart() {
         return cartRepository.findAll().stream().map(cartMapper::toCartResponse).toList();
     }
@@ -57,6 +60,7 @@ public class CartService {
         return cart;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Cart getCartById(String cartId) {
         return cartRepository.findByCartId(cartId);
     }

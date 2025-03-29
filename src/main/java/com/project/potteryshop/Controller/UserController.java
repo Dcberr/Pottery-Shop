@@ -47,6 +47,15 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/info")
+    public ApiResponse<UserResponse> getMyInfor() {
+        return ApiResponse.<UserResponse>builder()
+                .code(200)
+                .message("Get Infor Succesful!!!")
+                .result(userService.getMyInfor())
+                .build();
+    }
+
     @PutMapping
     public ApiResponse<UserResponse> updateUser(@RequestParam String userId, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()

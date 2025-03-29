@@ -2,6 +2,8 @@ package com.project.potteryshop.Service;
 
 import java.util.HashSet;
 import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.project.potteryshop.Dto.Request.Authorize.RoleRequest;
@@ -24,6 +26,7 @@ public class RoleService {
     private final RoleMapper roleMapper;
     private final PermissionRepository permissionRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse createRole(RoleRequest request) {
         Role role = roleMapper.toRole(request);
 
@@ -35,10 +38,12 @@ public class RoleService {
         return roleMapper.toRoleResponse(role);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse update(String roleName, RoleUpdateRequest request) {
         Role role = roleRepository.findById(roleName).orElseThrow();
 
@@ -52,6 +57,7 @@ public class RoleService {
         return roleMapper.toRoleResponse(role);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(String role) {
         roleRepository.deleteById(role);
     }

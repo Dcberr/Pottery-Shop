@@ -2,6 +2,7 @@ package com.project.potteryshop.Service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class ProductService {
     private final ProductItemRepository productItemRepository;
 
     @Transactional
+    @PreAuthorize("hasAuthority('CREATE_PRODUCT')")
     public Product createProduct(ProductCreateRequest request, String categoryId) {
         // Tìm category trước khi tạo product
         ProductCategory productCategory = productCategoryRepository.findById(categoryId)
@@ -63,10 +65,12 @@ public class ProductService {
         return product;
     }
 
+    @PreAuthorize("hasAuthority('GET_PRODUCT')")
     public Product getProductById(String productId) {
         return productRepository.findByProductId(productId);
     }
 
+    @PreAuthorize("hasAuthority('GET_ALL_PRODUCT')")
     public List<Product> getAllProduct() {
         return productRepository.findAll().stream().toList();
     }

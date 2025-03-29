@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,6 +74,7 @@ public class MinioService {
     // }
     // }
 
+    @PreAuthorize("hasAuthority('UPLOAD_FILE')")
     public List<String> uploadFiles(List<MultipartFile> files, String productId) {
         List<String> filesName = files.stream().map(file -> {
             try (InputStream inputStream = file.getInputStream()) {
@@ -98,6 +100,7 @@ public class MinioService {
         return filesName;
     }
 
+    @PreAuthorize("hasAuthority('GET_FILE_NAME')")
     public String getFile(String fileName) {
         try {
             // Image image = new Image();
@@ -116,6 +119,7 @@ public class MinioService {
         }
     }
 
+    @PreAuthorize("hasAuthority('DELETE_FILE_NAME')")
     public void deleteFile(String fileName) {
         try {
             Image image = new Image();
@@ -133,6 +137,7 @@ public class MinioService {
         }
     }
 
+    @PreAuthorize("hasAuthority('GET_IMAGE')")
     public Image getImage(String imageId) {
         return imageRepository.findById(imageId).orElseThrow();
     }

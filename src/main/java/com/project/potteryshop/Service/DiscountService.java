@@ -3,6 +3,7 @@ package com.project.potteryshop.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.project.potteryshop.Dto.Request.Discount.DiscountCreateRequest;
@@ -24,6 +25,7 @@ public class DiscountService {
     @Autowired
     private ProductRepository productRepository;
 
+    @PreAuthorize("hasAuthority('CREATE_DISCOUNT')")
     public Discount createDiscount(DiscountCreateRequest request) {
         Discount discount = discountMapper.toDiscount(request);
 

@@ -3,6 +3,7 @@ package com.project.potteryshop.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.project.potteryshop.Dto.Request.OrderCreateRequest;
@@ -26,6 +27,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
+    @PreAuthorize("hasAuthority('CREATE_ORDER')")
     public OrderCreateResponse createOrder(OrderCreateRequest request) {
         UserOrder order = new UserOrder();
         order.setPaymentMethod(request.getPaymentMethod());
@@ -57,10 +59,12 @@ public class OrderService {
                 totalPrice, request.getPaymentMethod(), products);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserOrder> getAllUserOrder() {
         return orderRepository.findAll().stream().toList();
     }
 
+    @PreAuthorize("hasAuthority('GET_ORDER')")
     public UserOrder getOrderById(String orderId) {
         return orderRepository.findByOrderId(orderId);
     }

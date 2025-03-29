@@ -4,6 +4,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,10 +67,21 @@ public class UserService {
         return response;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUser() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
+    public UserResponse getMyInfor() {
+        SecurityContext context = SecurityContextHolder.getContext();
+
+        String name = context.getAuthentication().getName();
+        User user = userRepository.findByUsername(name).orElseThrow();
+
+        return userMapper.toUserResponse(user);
+    }
+
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow();
 
@@ -82,6 +97,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String userId) {
         return userMapper.toUserResponse(userRepository.findByUserId(userId));
     }
