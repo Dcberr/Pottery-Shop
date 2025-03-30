@@ -12,6 +12,7 @@ import com.nimbusds.jose.JOSEException;
 import com.project.potteryshop.Dto.ApiResponse;
 import com.project.potteryshop.Dto.Request.Authentication.AuthenticationRequest;
 import com.project.potteryshop.Dto.Request.Authentication.IntrospectRequest;
+import com.project.potteryshop.Dto.Request.Authentication.LogoutRequest;
 import com.project.potteryshop.Dto.Response.Authentication.AuthenticationResponse;
 import com.project.potteryshop.Dto.Response.Authentication.IntrospectResponse;
 import com.project.potteryshop.Service.AuthenticationService;
@@ -39,5 +40,11 @@ public class AuthenticationController {
                 .message("Introspected Successfull!!!")
                 .result(authenticationService.introspect(request))
                 .build();
+    }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws Exception {
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder().code(200).build();
     }
 }

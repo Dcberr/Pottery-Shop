@@ -5,8 +5,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
+import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,18 +25,23 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.project.potteryshop.Dto.Request.Authentication.AuthenticationRequest;
 import com.project.potteryshop.Dto.Request.Authentication.IntrospectRequest;
+import com.project.potteryshop.Dto.Request.Authentication.LogoutRequest;
 import com.project.potteryshop.Dto.Response.Authentication.AuthenticationResponse;
 import com.project.potteryshop.Dto.Response.Authentication.IntrospectResponse;
+import com.project.potteryshop.Entity.InvalidatedToken;
 import com.project.potteryshop.Entity.User;
+import com.project.potteryshop.Repository.InvalidatedTokenRepository;
 import com.project.potteryshop.Repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthenticationService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final InvalidatedTokenRepository invalidatedTokenRepository;
     // private final String SIGNERKEY =
 
     @Value("${jwt.signerKey}")
@@ -63,6 +68,7 @@ public class AuthenticationService {
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
 
@@ -81,15 +87,15 @@ public class AuthenticationService {
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         String token = request.getToken();
 
-        JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY.getBytes());
+        boolean isValid = true;
 
-        SignedJWT signedJWT = SignedJWT.parse(token);
+        try {
+            verifyToken(token);
+        } catch (Exception e) {
+            isValid = false;
+        }
 
-        Date expriryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
-        Boolean verified = signedJWT.verify(jwsVerifier);
-
-        return IntrospectResponse.builder().valid(verified && expriryTime.after(new Date())).build();
+        return IntrospectResponse.builder().valid(isValid).build();
     }
 
     private String buildScope(User user) {
@@ -107,5 +113,39 @@ public class AuthenticationService {
             });
         }
         return stringJoiner.toString();
+    }
+
+    public void logout(LogoutRequest request) throws Exception {
+        SignedJWT signToken = verifyToken(request.getToken());
+
+        String jit = signToken.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    private SignedJWT verifyToken(String token) throws Exception {
+        JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY.getBytes());
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expriryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        Boolean verified = signedJWT.verify(jwsVerifier);
+
+        if (!(verified && expriryTime.after(new Date()))) {
+            throw new Exception("Invalidated Token");
+        }
+
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+            throw new Exception("Invalidated Token");
+        }
+
+        return signedJWT;
     }
 }

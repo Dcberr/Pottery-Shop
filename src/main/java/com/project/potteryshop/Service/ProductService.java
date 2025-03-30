@@ -12,7 +12,6 @@ import com.project.potteryshop.Entity.Product;
 import com.project.potteryshop.Entity.ProductCategory;
 import com.project.potteryshop.Entity.ProductItem;
 import com.project.potteryshop.Mapper.ProductItemMapper;
-import com.project.potteryshop.Mapper.ProductMapper;
 import com.project.potteryshop.Repository.ImageRepository;
 import com.project.potteryshop.Repository.ProductCategoryRepository;
 import com.project.potteryshop.Repository.ProductItemRepository;
@@ -27,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductService {
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
-    private final ProductMapper productMapper;
+    // private final ProductMapper productMapper;
     private final ImageRepository imageRepository;
     private final ProductItemMapper productItemMapper;
     private final ProductItemRepository productItemRepository;
