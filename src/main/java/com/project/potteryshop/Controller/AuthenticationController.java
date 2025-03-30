@@ -3,6 +3,7 @@ package com.project.potteryshop.Controller;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce.Cluster.Refresh;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import com.project.potteryshop.Dto.ApiResponse;
 import com.project.potteryshop.Dto.Request.Authentication.AuthenticationRequest;
 import com.project.potteryshop.Dto.Request.Authentication.IntrospectRequest;
 import com.project.potteryshop.Dto.Request.Authentication.LogoutRequest;
+import com.project.potteryshop.Dto.Request.Authentication.RefreshRequest;
 import com.project.potteryshop.Dto.Response.Authentication.AuthenticationResponse;
 import com.project.potteryshop.Dto.Response.Authentication.IntrospectResponse;
 import com.project.potteryshop.Service.AuthenticationService;
@@ -46,5 +48,14 @@ public class AuthenticationController {
     public ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws Exception {
         authenticationService.logout(request);
         return ApiResponse.<Void>builder().code(200).build();
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshRequest request) throws Exception {
+        return ApiResponse.<AuthenticationResponse>builder()
+                .code(200)
+                .message("Authenticated!!!")
+                .result(authenticationService.refreshToken(request))
+                .build();
     }
 }

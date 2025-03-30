@@ -26,6 +26,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.project.potteryshop.Dto.Request.Authentication.AuthenticationRequest;
 import com.project.potteryshop.Dto.Request.Authentication.IntrospectRequest;
 import com.project.potteryshop.Dto.Request.Authentication.LogoutRequest;
+import com.project.potteryshop.Dto.Request.Authentication.RefreshRequest;
 import com.project.potteryshop.Dto.Response.Authentication.AuthenticationResponse;
 import com.project.potteryshop.Dto.Response.Authentication.IntrospectResponse;
 import com.project.potteryshop.Entity.InvalidatedToken;
@@ -47,6 +48,12 @@ public class AuthenticationService {
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
 
+    @Value("${jwt.valid-duration}")
+    protected long VALID_DURATION;
+
+    @Value("${jwt.refreshable-duration}")
+    protected long REFRESHABLE_DURATION;
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.info(request.getUsername());
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
@@ -67,7 +74,7 @@ public class AuthenticationService {
                 .issuer("Dcberr")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
@@ -90,7 +97,7 @@ public class AuthenticationService {
         boolean isValid = true;
 
         try {
-            verifyToken(token);
+            verifyToken(token, false);
         } catch (Exception e) {
             isValid = false;
         }
@@ -116,7 +123,7 @@ public class AuthenticationService {
     }
 
     public void logout(LogoutRequest request) throws Exception {
-        SignedJWT signToken = verifyToken(request.getToken());
+        SignedJWT signToken = verifyToken(request.getToken(), true);
 
         String jit = signToken.getJWTClaimsSet().getJWTID();
         Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
@@ -129,12 +136,42 @@ public class AuthenticationService {
         invalidatedTokenRepository.save(invalidatedToken);
     }
 
-    private SignedJWT verifyToken(String token) throws Exception {
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws Exception {
+        SignedJWT signedJWT = verifyToken(request.getToken(), true);
+
+        String jid = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jid)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        String username = signedJWT.getJWTClaimsSet().getSubject();
+
+        User user = userRepository.findByUsername(username).orElseThrow();
+
+        String token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
+    }
+
+    private SignedJWT verifyToken(String token, boolean isRefresh) throws Exception {
         JWSVerifier jwsVerifier = new MACVerifier(SIGNER_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
-        Date expriryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Date expriryTime = (isRefresh) ? new Date(signedJWT
+                .getJWTClaimsSet()
+                .getIssueTime()
+                .toInstant()
+                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                .toEpochMilli())
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         Boolean verified = signedJWT.verify(jwsVerifier);
 

@@ -25,3 +25,5 @@ minio:
 
 jwt:
   signerKey: ${SIGNERKEY}
+  valid-duration: 30
+  refreshable-duration: 60
