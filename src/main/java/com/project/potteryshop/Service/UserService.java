@@ -2,6 +2,7 @@ package com.project.potteryshop.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,11 +11,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.project.potteryshop.Dto.Request.Authentication.ResetPasswordRequest;
 import com.project.potteryshop.Dto.Request.User.UserCreateRequest;
 import com.project.potteryshop.Dto.Request.User.UserUpdateRequest;
 import com.project.potteryshop.Dto.Response.User.UserCreateResponse;
 import com.project.potteryshop.Dto.Response.User.UserResponse;
 import com.project.potteryshop.Entity.Cart;
+import com.project.potteryshop.Entity.PasswordResetToken;
 import com.project.potteryshop.Entity.Role;
 import com.project.potteryshop.Entity.User;
 import com.project.potteryshop.Enum.UserRole;
@@ -38,6 +41,7 @@ public class UserService {
     private final CartRepository cartRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final PasswordResetTokenService passwordResetTokenService;
 
     public UserCreateResponse createUser(UserCreateRequest newUser) {
         User user = userMapper.toUser(newUser);
@@ -98,5 +102,19 @@ public class UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String userId) {
         return userMapper.toUserResponse(userRepository.findByUserId(userId));
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        Optional<PasswordResetToken> passwordResetToken = passwordResetTokenService.validateToken(request.getToken());
+
+        if (passwordResetToken.isEmpty()) {
+            throw new RuntimeException("Invalid or expired token!");
+        }
+
+        User user = userRepository.findByEmail(passwordResetToken.get().getEmail());
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
+        userRepository.save(user);
     }
 }

@@ -17,6 +17,18 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 minio:
   url: ${MINIO_URL}
   accessKey: ${MINIO_ACCESSKEY}
@@ -25,5 +37,7 @@ minio:
 
 jwt:
   signerKey: ${SIGNERKEY}
-  valid-duration: 30
-  refreshable-duration: 60
+  valid-duration: 3600
+  refreshable-duration: 7200
+  reset-duration: 3600
+

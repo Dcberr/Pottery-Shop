@@ -8,6 +8,8 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.project.potteryshop.Dto.Request.Authentication.AuthenticationRequest;
+import com.project.potteryshop.Dto.Request.Authentication.EmailReceiverRequest;
 import com.project.potteryshop.Dto.Request.Authentication.IntrospectRequest;
 import com.project.potteryshop.Dto.Request.Authentication.LogoutRequest;
 import com.project.potteryshop.Dto.Request.Authentication.RefreshRequest;
@@ -34,6 +37,8 @@ import com.project.potteryshop.Entity.User;
 import com.project.potteryshop.Repository.InvalidatedTokenRepository;
 import com.project.potteryshop.Repository.UserRepository;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,6 +48,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
+    private final JavaMailSender mailSender;
+    private final PasswordResetTokenService passwordResetTokenService;
     // private final String SIGNERKEY =
 
     @Value("${jwt.signerKey}")
@@ -59,9 +66,14 @@ public class AuthenticationService {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        passwordEncoder.matches(request.getPassword(), user.getPassword());
+        String token = new String();
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            token = generateToken(user);
 
-        String token = generateToken(user);
+        } else {
+            throw new RuntimeException("Authenticated Failed!!!");
+        }
+
         return AuthenticationResponse.builder().token(token).build();
 
     }
@@ -184,5 +196,28 @@ public class AuthenticationService {
         }
 
         return signedJWT;
+    }
+
+    public void sendResetPasswordEmail(EmailReceiverRequest request) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+
+        messageHelper.setTo(request.getToEmail());
+        messageHelper.setSubject("[POTTERY SHOP] RESET YOUR PASSWORD");
+        messageHelper.setText("<p>Click the link below to reset your password:</p>"
+                + "<a href=\"" + request.getResetLink() + "\">Reset Password</a>", true);
+
+        mailSender.send(message);
+    }
+
+    public void forgotPassword(String username) throws MessagingException {
+        User user = userRepository.findByUsername(username).orElseThrow();
+
+        String email = user.getEmail();
+        EmailReceiverRequest emailReceiverRequest = EmailReceiverRequest.builder().toEmail(email).resetLink(
+                "http://localhost:8080/api/auth/reset-password?token=" + passwordResetTokenService.createToken(email))
+                .build();
+
+        sendResetPasswordEmail(emailReceiverRequest);
     }
 }

@@ -23,7 +23,8 @@ public class SecurityConfig {
     private CustomJwtDecoder customJwtDecoder;
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/users", "/auth", "/auth/introspect", "/auth/logout", "/auth/refresh"
+            "/users", "/auth", "/auth/introspect", "/auth/logout", "/auth/refresh", "/auth/forgot-password",
+            "/users/reset"
     };
 
     @Bean

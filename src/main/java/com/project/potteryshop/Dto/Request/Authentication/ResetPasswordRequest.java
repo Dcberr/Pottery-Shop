@@ -1,4 +1,4 @@
-package com.project.potteryshop.Dto.Response.Authentication;
+package com.project.potteryshop.Dto.Request.Authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IntrospectResponse {
-    private Boolean valid;
+public class ResetPasswordRequest {
+    private String token;
+    private String newPassword;
 }

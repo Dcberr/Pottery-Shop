@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.potteryshop.Dto.ApiResponse;
 import com.project.potteryshop.Dto.Request.Product.ProductCreateRequest;
-import com.project.potteryshop.Dto.Response.Product.ProductResponse;
 import com.project.potteryshop.Entity.Product;
 import com.project.potteryshop.Service.ProductService;
 

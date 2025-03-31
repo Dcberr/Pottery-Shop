@@ -3,10 +3,10 @@ package com.project.potteryshop.Controller;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce.Cluster.Refresh;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nimbusds.jose.JOSEException;
@@ -18,6 +18,8 @@ import com.project.potteryshop.Dto.Request.Authentication.RefreshRequest;
 import com.project.potteryshop.Dto.Response.Authentication.AuthenticationResponse;
 import com.project.potteryshop.Dto.Response.Authentication.IntrospectResponse;
 import com.project.potteryshop.Service.AuthenticationService;
+
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping("/auth")
@@ -56,6 +58,15 @@ public class AuthenticationController {
                 .code(200)
                 .message("Authenticated!!!")
                 .result(authenticationService.refreshToken(request))
+                .build();
+    }
+
+    @PostMapping("/forgot-password")
+    public ApiResponse<Void> forgotPassword(@RequestParam String username) throws MessagingException {
+        authenticationService.forgotPassword(username);
+        return ApiResponse.<Void>builder()
+                .code(200)
+                .message("Sent Reset Mail Successful!!!")
                 .build();
     }
 }

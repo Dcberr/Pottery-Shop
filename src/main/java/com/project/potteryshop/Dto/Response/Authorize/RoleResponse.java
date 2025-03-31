@@ -3,8 +3,6 @@ package com.project.potteryshop.Dto.Response.Authorize;
 import java.util.Set;
 
 import com.project.potteryshop.Entity.Permission;
-
-import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

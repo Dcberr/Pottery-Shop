@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.potteryshop.Dto.ApiResponse;
+import com.project.potteryshop.Dto.Request.Authentication.ResetPasswordRequest;
 import com.project.potteryshop.Dto.Request.User.UserCreateRequest;
 import com.project.potteryshop.Dto.Request.User.UserUpdateRequest;
 import com.project.potteryshop.Dto.Response.User.UserCreateResponse;
@@ -71,6 +72,15 @@ public class UserController {
                 .code(200)
                 .message("Get User " + userId + " Successful!!!")
                 .result(userService.getUserById(userId))
+                .build();
+    }
+
+    @PostMapping("/reset")
+    public ApiResponse<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request);
+        return ApiResponse.<Void>builder()
+                .code(200)
+                .message("Reset Password Successful!!!")
                 .build();
     }
 }
