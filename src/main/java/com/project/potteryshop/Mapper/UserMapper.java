@@ -19,6 +19,9 @@ public interface UserMapper {
     @Mapping(target = "paymentHistories", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "userRole", ignore = true)
+    @Mapping(target = "lastLogin", ignore = true)
+    @Mapping(target = "messageRoomMembers", ignore = true)
+    @Mapping(target = "messageRooms", ignore = true)
     User toUser(UserCreateRequest request);
 
     UserCreateResponse toUserCreateResponse(User user);
@@ -32,5 +35,8 @@ public interface UserMapper {
     @Mapping(target = "paymentHistories", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "userRole", ignore = true)
+    @Mapping(target = "lastLogin", ignore = true)
+    @Mapping(target = "messageRoomMembers", ignore = true)
+    @Mapping(target = "messageRooms", ignore = true)
     void toUpdateUser(@MappingTarget User user, UserUpdateRequest request);
 }

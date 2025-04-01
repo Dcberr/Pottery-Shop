@@ -1,5 +1,7 @@
 package com.project.potteryshop.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +63,7 @@ public class UserService {
         Cart newCart = cartService.createCart();
         newCart.setUser(user);
         user.setCart(newCart);
+        user.setLastLogin(new Date(Instant.now().toEpochMilli()));
 
         cartRepository.save(newCart);
 

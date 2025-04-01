@@ -34,6 +34,7 @@ import com.project.potteryshop.Dto.Response.Authentication.AuthenticationRespons
 import com.project.potteryshop.Dto.Response.Authentication.IntrospectResponse;
 import com.project.potteryshop.Entity.InvalidatedToken;
 import com.project.potteryshop.Entity.User;
+import com.project.potteryshop.Enum.UserStatus;
 import com.project.potteryshop.Repository.InvalidatedTokenRepository;
 import com.project.potteryshop.Repository.UserRepository;
 
@@ -139,6 +140,8 @@ public class AuthenticationService {
 
         String jit = signToken.getJWTClaimsSet().getJWTID();
         Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+        String username = signToken.getJWTClaimsSet().getSubject();
+        User user = userRepository.findByUsername(username).orElseThrow(null);
 
         InvalidatedToken invalidatedToken = InvalidatedToken.builder()
                 .id(jit)
@@ -146,6 +149,10 @@ public class AuthenticationService {
                 .build();
 
         invalidatedTokenRepository.save(invalidatedToken);
+
+        user.setLastLogin(new Date(Instant.now().toEpochMilli()));
+        user.setStatus(UserStatus.INACTIVE);
+        userRepository.save(user);
     }
 
     public AuthenticationResponse refreshToken(RefreshRequest request) throws Exception {

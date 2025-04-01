@@ -1,6 +1,7 @@
 package com.project.potteryshop.Entity;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +49,7 @@ public class User {
     private String username;
     private String address;
     private String password;
+    private Date lastLogin;
 
     // @Enumerated(EnumType.STRING)
     @ManyToMany
@@ -69,4 +71,12 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<PaymentHistory> paymentHistories;
+
+    @OneToMany(mappedBy = "createdBy")
+    @JsonManagedReference
+    private List<MessageRoom> messageRooms;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<MessageRoomMember> messageRoomMembers;
 }
