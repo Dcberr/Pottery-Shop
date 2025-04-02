@@ -83,4 +83,13 @@ public class UserController {
                 .message("Reset Password Successful!!!")
                 .build();
     }
+
+    @GetMapping("/online")
+    public ApiResponse<List<UserResponse>> getOnlineUsers() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .code(200)
+                .message("Get All Online Users Successfull!!!")
+                .result(userService.getUserOnline())
+                .build();
+    }
 }

@@ -72,7 +72,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<PaymentHistory> paymentHistories;
 
-    @OneToMany(mappedBy = "createdBy")
+    @ManyToMany(mappedBy = "users")
     @JsonManagedReference
     private List<MessageRoom> messageRooms;
 

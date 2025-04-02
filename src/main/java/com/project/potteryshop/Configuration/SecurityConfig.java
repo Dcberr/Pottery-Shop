@@ -24,13 +24,14 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/users", "/auth", "/auth/introspect", "/auth/logout", "/auth/refresh", "/auth/forgot-password",
-            "/users/reset"
+            "/users/reset", "/users/online"
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer

@@ -70,7 +70,8 @@ public class AuthenticationService {
         String token = new String();
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             token = generateToken(user);
-
+            user.setStatus(UserStatus.ACTIVE);
+            userRepository.save(user);
         } else {
             throw new RuntimeException("Authenticated Failed!!!");
         }

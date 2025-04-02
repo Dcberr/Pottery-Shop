@@ -14,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -32,18 +34,21 @@ public class MessageRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String messageRoomId;
+    private String chatId;
+    private String senderId;
+    private String recipientId;
 
-    private String name;
+    // private String name;
 
-    private Boolean isGroup;
+    // private Boolean isGroup;
 
-    @CreatedDate
-    private Date createdDate;
+    // @CreatedDate
+    // private Date createdDate;
 
-    @ManyToOne
-    @JoinColumn(name = "createdBy")
-    @JsonBackReference
-    private User createdBy;
+    @ManyToMany
+    @JoinTable(name = "room_users", joinColumns = @JoinColumn(name = "messageRoomId"), inverseJoinColumns = @JoinColumn(name = "userId"))
+    @JsonManagedReference
+    private User users;
 
     @OneToMany(mappedBy = "messageRoom", cascade = CascadeType.ALL)
     @JsonManagedReference

@@ -50,7 +50,7 @@ public class UserService {
         log.info(newUser.getName());
         log.info(user.getName());
 
-        user.setStatus(UserStatus.ACTIVE);
+        user.setStatus(UserStatus.INACTIVE);
 
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById(UserRole.CUSTOMER.name()).ifPresent(roles::add);
@@ -119,5 +119,12 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         userRepository.save(user);
+    }
+
+    public List<UserResponse> getUserOnline() {
+        return userRepository.findAllByStatus(UserStatus.ACTIVE)
+                .stream()
+                .map(userMapper::toUserResponse)
+                .toList();
     }
 }
