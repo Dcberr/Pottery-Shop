@@ -24,7 +24,7 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
             "/users", "/auth", "/auth/introspect", "/auth/logout", "/auth/refresh", "/auth/forgot-password",
-            "/users/reset", "/users/online"
+            "/users/reset", "/users/online", "/discounts/valid-discounts"
     };
 
     @Bean
@@ -32,6 +32,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer

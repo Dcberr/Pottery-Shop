@@ -130,7 +130,6 @@ public class AuthenticationService {
                         stringJoiner.add(permissions.getName());
                     });
                 }
-
             });
         }
         return stringJoiner.toString();

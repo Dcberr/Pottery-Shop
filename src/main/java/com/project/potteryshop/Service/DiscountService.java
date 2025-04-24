@@ -2,7 +2,6 @@ package com.project.potteryshop.Service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +12,16 @@ import com.project.potteryshop.Mapper.DiscountMapper;
 import com.project.potteryshop.Repository.DiscountRepository;
 import com.project.potteryshop.Repository.ProductRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class DiscountService {
-    @Autowired
-    private DiscountRepository discountRepository;
-    @Autowired
-    private DiscountMapper discountMapper;
-    @Autowired
-    private ProductRepository productRepository;
+    private final DiscountRepository discountRepository;
+    private final DiscountMapper discountMapper;
+    private final ProductRepository productRepository;
 
     @PreAuthorize("hasAuthority('CREATE_DISCOUNT')")
     public Discount createDiscount(DiscountCreateRequest request) {
@@ -57,5 +55,9 @@ public class DiscountService {
 
     public List<Discount> getAllDiscounts() {
         return discountRepository.findAll().stream().toList();
+    }
+
+    public List<Discount> getValidDiscountsByProductId(String productId) {
+        return discountRepository.findAllDiscountByProductId(productId);
     }
 }

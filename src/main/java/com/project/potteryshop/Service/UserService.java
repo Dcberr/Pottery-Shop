@@ -127,4 +127,17 @@ public class UserService {
                 .map(userMapper::toUserResponse)
                 .toList();
     }
+
+    public void connectUser(User user) {
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(user);
+    }
+
+    public void disconnect(User user) {
+        User storedUser = userRepository.findById(user.getUserId()).orElseThrow();
+        if (storedUser != null) {
+            storedUser.setStatus(UserStatus.INACTIVE);
+            userRepository.save(storedUser);
+        }
+    }
 }

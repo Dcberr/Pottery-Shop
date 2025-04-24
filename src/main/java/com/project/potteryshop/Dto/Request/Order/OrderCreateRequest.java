@@ -1,4 +1,4 @@
-package com.project.potteryshop.Dto.Request;
+package com.project.potteryshop.Dto.Request.Order;
 
 import java.util.List;
 import java.util.Map;

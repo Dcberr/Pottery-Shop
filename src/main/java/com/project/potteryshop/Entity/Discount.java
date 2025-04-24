@@ -31,6 +31,9 @@ public class Discount {
     private LocalDate startDate;
     private LocalDate endDate;
     private String description;
+    private int percentDiscount;
+    private float minimum;
+    // private float maximum;
 
     @ManyToMany(mappedBy = "discounts")
     @JsonBackReference

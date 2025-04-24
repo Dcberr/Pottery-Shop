@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class DiscountCreateRequest {
     private String name;
     private LocalDate startDate;
+    private int percentDiscount;
+    private float minimum;
+    // private float maximum;
     private LocalDate endDate;
     private String description;
     private List<String> productsId;

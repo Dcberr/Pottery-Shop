@@ -48,7 +48,7 @@ public class MessageRoom {
     @ManyToMany
     @JoinTable(name = "room_users", joinColumns = @JoinColumn(name = "messageRoomId"), inverseJoinColumns = @JoinColumn(name = "userId"))
     @JsonManagedReference
-    private User users;
+    private List<User> users;
 
     @OneToMany(mappedBy = "messageRoom", cascade = CascadeType.ALL)
     @JsonManagedReference

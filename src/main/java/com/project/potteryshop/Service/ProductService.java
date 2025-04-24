@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.potteryshop.Dto.Request.Product.ProductCreateRequest;
+import com.project.potteryshop.Entity.Discount;
 import com.project.potteryshop.Entity.Image;
 import com.project.potteryshop.Entity.Product;
 import com.project.potteryshop.Entity.ProductCategory;
 import com.project.potteryshop.Entity.ProductItem;
 import com.project.potteryshop.Mapper.ProductItemMapper;
+import com.project.potteryshop.Repository.DiscountRepository;
 import com.project.potteryshop.Repository.ImageRepository;
 import com.project.potteryshop.Repository.ProductCategoryRepository;
 import com.project.potteryshop.Repository.ProductItemRepository;
@@ -30,6 +32,7 @@ public class ProductService {
     private final ImageRepository imageRepository;
     private final ProductItemMapper productItemMapper;
     private final ProductItemRepository productItemRepository;
+    private final DiscountRepository discountRepository;
 
     @Transactional
     @PreAuthorize("hasAuthority('CREATE_PRODUCT')")
@@ -73,4 +76,5 @@ public class ProductService {
     public List<Product> getAllProduct() {
         return productRepository.findAll().stream().toList();
     }
+
 }

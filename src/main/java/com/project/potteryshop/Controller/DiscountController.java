@@ -47,4 +47,13 @@ public class DiscountController {
                 .result(discountService.getAllDiscounts())
                 .build();
     }
+
+    @GetMapping("/valid-discounts/{productId}")
+    public ApiResponse<List<Discount>> getValidDiscounts(@PathVariable String productId) {
+        return ApiResponse.<List<Discount>>builder()
+                .code(200)
+                .message("Get All Valid Discounts Successful!!!")
+                .result(discountService.getValidDiscountsByProductId(productId))
+                .build();
+    }
 }

@@ -3,6 +3,9 @@ package com.project.potteryshop.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,7 @@ import com.project.potteryshop.Dto.Request.User.UserCreateRequest;
 import com.project.potteryshop.Dto.Request.User.UserUpdateRequest;
 import com.project.potteryshop.Dto.Response.User.UserCreateResponse;
 import com.project.potteryshop.Dto.Response.User.UserResponse;
+import com.project.potteryshop.Entity.User;
 import com.project.potteryshop.Service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -90,6 +94,26 @@ public class UserController {
                 .code(200)
                 .message("Get All Online Users Successfull!!!")
                 .result(userService.getUserOnline())
+                .build();
+    }
+
+    @MessageMapping("/user.connectUser")
+    @SendTo("/user/public")
+    public ApiResponse<Void> connectUser(@Payload User user) {
+        userService.connectUser(user);
+        return ApiResponse.<Void>builder()
+                .code(200)
+                .message("User " + user.getName() + " is connected!!!")
+                .build();
+    }
+
+    @MessageMapping("/user.disconnectUser")
+    @SendTo("/user/public")
+    public ApiResponse<Void> disconnectUser(@Payload User user) {
+        userService.disconnect(user);
+        return ApiResponse.<Void>builder()
+                .code(200)
+                .message("User " + user.getName() + " is disconnected!!!")
                 .build();
     }
 }

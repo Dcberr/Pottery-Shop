@@ -41,3 +41,10 @@ jwt:
   refreshable-duration: 7200
   reset-duration: 3600
 
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket: DEBUG
+        messaging: DEBUG
