@@ -9,3 +9,17 @@ services:
       - 'MYSQL_PASSWORD=${DB_PASSWORD}'
     ports:
       - '${DB_PORT}:3306'
+    networks:
+      - backend
+
+  redis:
+    image: 'redis:7.2'
+    restart: always
+    ports:
+      - '${REDIS_PORT}:${REDIS_PORT}'
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

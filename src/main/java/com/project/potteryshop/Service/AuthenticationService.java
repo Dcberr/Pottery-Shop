@@ -8,6 +8,7 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,7 +52,7 @@ public class AuthenticationService {
     private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final JavaMailSender mailSender;
     private final PasswordResetTokenService passwordResetTokenService;
-    // private final String SIGNERKEY =
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -138,17 +139,21 @@ public class AuthenticationService {
     public void logout(LogoutRequest request) throws Exception {
         SignedJWT signToken = verifyToken(request.getToken(), true);
 
-        String jit = signToken.getJWTClaimsSet().getJWTID();
-        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+        // String jit = signToken.getJWTClaimsSet().getJWTID();
+        // Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
         String username = signToken.getJWTClaimsSet().getSubject();
         User user = userRepository.findByUsername(username).orElseThrow(null);
+        Long lastLogin = new Date(Instant.now().toEpochMilli()).getTime();
 
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
+        // InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+        // .id(jit)
+        // .expiryTime(expiryTime)
+        // .build();
 
-        invalidatedTokenRepository.save(invalidatedToken);
+        long expiration = signToken.getJWTClaimsSet().getExpirationTime().getTime() - lastLogin;
+        tokenBlacklistService.blacklistToken(request.getToken(), expiration);
+
+        // invalidatedTokenRepository.save(invalidatedToken);
 
         user.setLastLogin(new Date(Instant.now().toEpochMilli()));
         user.setStatus(UserStatus.INACTIVE);
@@ -198,8 +203,14 @@ public class AuthenticationService {
             throw new Exception("Invalidated Token");
         }
 
-        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
-            throw new Exception("Invalidated Token");
+        // if
+        // (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+        // {
+        // throw new Exception("Invalidated Token");
+        // }
+
+        if (tokenBlacklistService.isTokenBlacklisted(token)) {
+            throw new Exception("Invalidated Token!!!");
         }
 
         return signedJWT;
@@ -227,4 +238,5 @@ public class AuthenticationService {
 
         sendResetPasswordEmail(emailReceiverRequest);
     }
+
 }
