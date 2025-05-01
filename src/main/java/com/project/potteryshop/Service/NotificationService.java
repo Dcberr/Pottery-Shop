@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class NotificationService {
-    private final NotificationConsumer notificationConsumer;
-    private final NotificationProducer notificationProducer;
     private final StringRedisTemplate stringRedisTemplate;
 
     private final String notificationHistoryKey = "notification-history";

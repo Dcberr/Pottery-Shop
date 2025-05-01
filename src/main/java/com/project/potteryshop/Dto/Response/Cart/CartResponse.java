@@ -3,7 +3,6 @@ package com.project.potteryshop.Dto.Response.Cart;
 import java.util.List;
 
 import com.project.potteryshop.Entity.Product;
-import com.project.potteryshop.Entity.UserOrder;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
